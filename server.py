@@ -467,5 +467,5 @@ def guess_category(name):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8080"))
     server = ThreadingHTTPServer(("127.0.0.1", port), MealPlannerHandler)
-    print(f"Weeknight Table running at http://127.0.0.1:{port}/")
+    print(f"On the Table running at http://127.0.0.1:{port}/")
     server.serve_forever()
