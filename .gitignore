@@ -1,0 +1,15 @@
+# Local runtime logs and generated files
+*.log
+logs/
+__pycache__/
+*.py[cod]
+
+# Local environment / secrets
+.env
+.env.*
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weeknight Table</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Local meal planning</p>
+        <h1>Weeknight Table</h1>
+      </div>
+      <div class="storage-badge" id="storageBadge">Saved locally</div>
+    </header>
+
+    <main class="app-shell">
+      <section class="workspace">
+        <nav class="tabs" aria-label="App sections">
+          <button class="tab active" data-tab="recipes">Recipes</button>
+          <button class="tab" data-tab="planning">Planning</button>
+          <button class="tab" data-tab="grocery">Grocery List</button>
+        </nav>
+
+        <section class="tab-page" id="planningPage">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Calendar</p>
+              <h2>Plan Recipes By Day</h2>
+            </div>
+            <div class="button-row">
+              <button class="secondary-button arrow-button" id="previousWeekButton" title="Previous week" aria-label="Previous week">&lt;</button>
+              <button class="secondary-button" id="todayButton">Today</button>
+              <button class="secondary-button arrow-button" id="nextWeekButton" title="Next week" aria-label="Next week">&gt;</button>
+            </div>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+          <section class="history-panel">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">Past meals</p>
+                <h2>Recipe History By Day</h2>
+              </div>
+            </div>
+            <div class="history-list" id="historyList"></div>
+          </section>
+        </section>
+
+        <section class="tab-page active" id="recipesPage">
+          <div class="recipes-layout">
+            <aside class="panel preferences-panel">
+              <div class="panel-heading">
+                <h2>Preferences</h2>
+                <div class="button-row">
+                  <button class="icon-button" id="togglePreferencesButton" title="Hide preferences" aria-label="Hide preferences">-</button>
+                  <button class="icon-button" id="resetButton" title="Clear local data" aria-label="Clear local data">R</button>
+                </div>
+              </div>
+              <div class="preferences-body" id="preferencesBody">
+                <label class="field">
+                  <span>Dietary needs</span>
+                  <input id="dietInput" type="text" placeholder="vegetarian, dairy-free, high protein" />
+                </label>
+                <label class="field">
+                  <span>Flavor preferences</span>
+                  <input id="preferenceInput" type="text" placeholder="spicy, lemony, Mediterranean" />
+                </label>
+                <label class="field">
+                  <span>Avoid</span>
+                  <input id="avoidInput" type="text" placeholder="mushrooms, cilantro, shellfish" />
+                </label>
+                <button class="primary-button" id="savePreferencesButton">Save preferences</button>
+              </div>
+            </aside>
+
+            <div class="recipes-main">
+              <section class="panel">
+                <div class="section-heading compact">
+                  <div>
+                    <p class="eyebrow">Meal assistant</p>
+                    <h2>Ask For Ideas</h2>
+                  </div>
+                </div>
+                <form class="idea-form" id="ideaForm">
+                  <label class="field">
+                    <span>What sounds good?</span>
+                    <textarea id="ideaInput" rows="4" placeholder="I want cozy dinners, 30 minutes max, maybe vegetarian but filling. Avoid mushrooms."></textarea>
+                  </label>
+                  <button class="primary-button" type="submit">Recommend recipes</button>
+                </form>
+                <div class="idea-output" id="ideaOutput">
+                  <p class="empty-state">Your saved preferences and rankings will be included when the local AI backend is configured.</p>
+                </div>
+              </section>
+
+              <section class="panel">
+                <div class="section-heading compact">
+                  <div>
+                    <p class="eyebrow">Web search</p>
+                    <h2>Find New Recipes</h2>
+                  </div>
+                  <button class="secondary-button" id="buildSearchButton">Build searches</button>
+                </div>
+                <div class="search-links" id="searchLinks"></div>
+                <form class="import-form" id="importRecipeForm">
+                  <div class="field-grid wide">
+                    <label class="field">
+                      <span>Recipe title</span>
+                      <input id="importName" type="text" placeholder="Recipe title from the website" required />
+                    </label>
+                    <label class="field">
+                      <span>Web link</span>
+                      <input id="importUrl" type="url" placeholder="https://..." />
+                    </label>
+                  </div>
+                  <div class="field-grid wide">
+                    <label class="field">
+                      <span>Time minutes</span>
+                      <input id="importMinutes" type="number" min="1" value="35" />
+                    </label>
+                    <label class="field">
+                      <span>Prep minutes</span>
+                      <input id="importPrep" type="number" min="0" value="10" />
+                    </label>
+                  </div>
+                  <div class="field-grid wide">
+                    <label class="field">
+                      <span>Servings</span>
+                      <input id="importServings" type="number" min="1" value="4" />
+                    </label>
+                    <label class="field">
+                      <span>Tags</span>
+                      <input id="importTags" type="text" placeholder="vegetarian, quick, spicy" />
+                    </label>
+                  </div>
+                  <label class="field">
+                    <span>Ingredients</span>
+                    <input id="importIngredients" type="text" placeholder="spinach|produce, feta|dairy, pasta|pantry" required />
+                  </label>
+                  <button class="primary-button" type="submit">Save web recipe</button>
+                </form>
+              </section>
+
+              <section class="panel">
+                <div class="section-heading compact">
+                  <div>
+                    <p class="eyebrow">Stored recipes</p>
+                    <h2>Ranked Library</h2>
+                  </div>
+                </div>
+                <div class="ranked-library" id="rankedLibrary"></div>
+              </section>
+            </div>
+
+            <aside class="panel detail-panel" id="recipeDetail">
+              <h2>Recipe Details</h2>
+              <p class="empty-state">Select a stored recipe to view rankings, notes, and its web link.</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="tab-page" id="groceryPage">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Shopping</p>
+              <h2>Grocery List</h2>
+            </div>
+            <div class="segmented-control" aria-label="Grocery view">
+              <button class="segment active" data-grocery-view="recipe">By recipe</button>
+              <button class="segment" data-grocery-view="category">By category</button>
+            </div>
+          </div>
+          <form class="add-row" id="addGroceryForm">
+            <input id="customGroceryInput" type="text" placeholder="Add your own item" />
+            <select id="customGroceryCategory" aria-label="Category">
+              <option>Produce</option>
+              <option>Dairy</option>
+              <option>Protein</option>
+              <option>Pantry</option>
+              <option>Frozen</option>
+              <option>Other</option>
+            </select>
+            <button type="submit">Add</button>
+          </form>
+          <div class="grocery-list" id="groceryList"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
