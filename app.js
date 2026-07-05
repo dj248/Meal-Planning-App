@@ -59,6 +59,7 @@ document.querySelectorAll("[data-grocery-view]").forEach((button) => {
 
 hydratePreferences();
 render();
+syncServerState();
 
 function defaultState() {
   return {
@@ -101,6 +102,25 @@ function loadState() {
   }
 }
 
+async function syncServerState() {
+  try {
+    const response = await fetch("/api/state");
+    if (!response.ok) return;
+    const payload = await response.json();
+    if (payload.exists) {
+      state = mergeState(defaultState(), payload.state);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      hydratePreferences();
+      render();
+      elements.storageBadge.textContent = "Loaded from server";
+    } else {
+      persistStateToServer();
+    }
+  } catch {
+    elements.storageBadge.textContent = "Saved in browser";
+  }
+}
+
 function mergeState(base, saved) {
   return {
     ...base,
@@ -138,7 +158,20 @@ function normalizeRecipe(recipe) {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  persistStateToServer();
   elements.storageBadge.textContent = `Saved ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
+}
+
+async function persistStateToServer() {
+  try {
+    await fetch("/api/state", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(state)
+    });
+  } catch {
+    // Browser storage remains the fallback if the local server is unavailable.
+  }
 }
 
 function hydratePreferences() {
@@ -533,7 +566,7 @@ async function requestMealIdeas(event) {
   const idea = elements.ideaInput.value.trim();
   if (!idea) return;
 
-  elements.ideaOutput.innerHTML = "<p class='empty-state'>Asking for recipe ideas...</p>";
+  elements.ideaOutput.innerHTML = "<p class='empty-state'>Finding and parsing recipe pages...</p>";
   try {
     const response = await fetch("/api/recommend", {
       method: "POST",

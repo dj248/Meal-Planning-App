@@ -1,6 +1,8 @@
 # Local runtime logs and generated files
 *.log
 logs/
+data/
+node_modules/
 __pycache__/
 *.py[cod]
 
